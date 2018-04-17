@@ -3,11 +3,17 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class EchoBot extends TelegramLongPollingBot {
 
+    Currency currency = new Currency();
+
     public void onUpdateReceived(Update update) {
+
 
         if (update.hasMessage() &&
                 update.getMessage().hasText()) {
@@ -17,7 +23,8 @@ public class EchoBot extends TelegramLongPollingBot {
             if (!response.isEmpty()) {
                 SendMessage message = new SendMessage()
                         .setChatId(update.getMessage().getChatId())
-                        .setText(update.getMessage().getText().substring(6));
+                        .setText(response);
+
 
                 try {
                     execute(message);
@@ -31,15 +38,21 @@ public class EchoBot extends TelegramLongPollingBot {
     public String getResponse(String message) {
         if (message.matches("(?i)echo: .*")) {
             return message.substring(6);
+        } else if (message.matches("(?i)reverse: .*")) {
+            String substring = message.substring(9);
+            return new StringBuilder(substring).reverse().toString();
+        } else {
+            return currency.convertAuto(message);
         }
-        return "";
+        //return "";
     }
 
+
     public String getBotUsername() {
-        return "BOT USERNAME EINTRAGEN";
+        return "systemshock_bot";
     }
 
     public String getBotToken() {
-        return "BOT TOKEN EINTRAGEN";
+        return "492559714:AAG3T2bmRPYFeERbNqEhtJtzAgiBmvDQl50";
     }
 }

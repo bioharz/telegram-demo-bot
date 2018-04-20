@@ -46,8 +46,10 @@ public final class Currency {
         return new ArrayList<>(this.currencies.keySet());
     }
 
-    public Double convertManual(String firstSymbol, double amount, String secSymbol) {
+    public Double convertManual(double amount, String firstSymbol, String secSymbol) {
         this.fillCurrencies();
+
+        if (amount == 0D) return 0D;
 
         double firstCurrencyInUsd = 0D;
         firstCurrencyInUsd = this.currencies.get(firstSymbol);
@@ -73,8 +75,35 @@ public final class Currency {
 
         Matcher matcher = this.pattern.matcher(message);
 
-        if(matcher.matches()) {
-            return matcher.group(1)+matcher.group(2)+matcher.group(3);
+        if (matcher.matches()) {
+            double value;
+            String firstSymbol = "";
+            String secondSymbol = "";
+            double converted = 0D;
+
+
+            try {
+                value = Double.valueOf(matcher.group(1));
+                firstSymbol = matcher.group(2);
+                secondSymbol = matcher.group(3);
+
+                converted = convertManual(value, firstSymbol, secondSymbol);
+
+            } catch (Exception e) {
+                System.err.println("Error while try to get matcher data: " + e);
+                converted = 0D;
+
+            }
+
+            if(converted == 0D) {
+                return "Sorry, I can't convert that :(";
+            } else {
+                return "You get "+converted+" "+secondSymbol+" back";
+            }
+            //return matcher.group(1)+matcher.group(2)+matcher.group(3);
+
+
+            //return convertManual();
         }
 
         return "";

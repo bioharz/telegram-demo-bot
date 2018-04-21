@@ -60,7 +60,7 @@ public final class Currency {
         if (secCurrencyInUsd == 0D) return 0D;
 
         double finalSum = 0D;
-        finalSum = secCurrencyInUsd /(amount * firstCurrencyInUsd) ;
+        finalSum = (amount / firstCurrencyInUsd) * secCurrencyInUsd;
 
         return finalSum;
     }
